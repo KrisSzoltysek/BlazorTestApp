@@ -1,0 +1,55 @@
+﻿@page "/movies"
+@inject HttpClient Http
+
+<PageTitle>Movies</PageTitle>
+
+<h1>Movies</h1>
+
+<p>This component demonstrates fetching movies from the server.</p>
+
+@if (movies == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Plot</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in movies)
+            {
+                <tr>
+                    <td>@movie.Id</td>
+                    <td>@movie.Title</td>
+                    <td>@movie.Plot</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Movie[]? movies;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(3000);
+        movies = await Http.GetFromJsonAsync<Movie[]>("/api/GetMovies");
+    }
+
+    public class Movie
+    {
+        public string? Id { get; set; }
+
+        public string Title { get; set; } = null;
+
+        public string Plot { get; set; } = null;
+
+    }
+}
